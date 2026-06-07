@@ -18,52 +18,77 @@ const getStudents = async (req, res) => {
 
 // REGISTER
 const registerStudent = async (req, res) => {
-    try {
-        const { name, email, password } = req.body;
+  try {
+    console.log("Received Data:", req.body);
 
-        // Validation
-        if (!name || !email || !password) {
-            return res.status(400).json({
-                msg: "All fields are required"
-            });
-        }
+    const {
+      name,
+      fatherName,
+      email,
+      gender,
+      password,
+      address,
+      mobile,
+      dob,
+      pincode,
+      course
+    } = req.body;
 
-        // Check if email already exists
-        const exist = await Student.findOne({
-            email: email.toLowerCase()
-        });
-
-        if (exist) {
-            return res.status(400).json({
-                msg: "Email already exists"
-            });
-        }
-
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create student
-        const student = new Student({
-            ...req.body,
-            email: email.toLowerCase(),
-            password: hashedPassword
-        });
-
-        await student.save();
-
-        return res.status(201).json({
-            msg: "Student registered successfully",
-            studentId: student._id,
-            name: student.name
-        });
-
-    } catch (err) {
-        console.error("Error:", err.message);
-
-        return res.status(500).json({
-            msg: "Internal Server Error"
-        });
+    if (
+      !name ||
+      !fatherName ||
+      !email ||
+      !gender ||
+      !password ||
+      !address ||
+      !mobile ||
+      !dob ||
+      !pincode
+    ) {
+      return res.status(400).json({
+        msg: "All fields are required",
+      });
     }
+
+    const exist = await Student.findOne({
+      email: email.toLowerCase(),
+    });
+
+    if (exist) {
+      return res.status(400).json({
+        msg: "Email already exists",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const student = new Student({
+      name,
+      fatherName,
+      email: email.toLowerCase(),
+      gender,
+      password: hashedPassword,
+      address,
+      mobile,
+      dob,
+      pincode,
+      course,
+    });
+
+    const savedStudent = await student.save();
+
+    return res.status(201).json({
+      msg: "Student registered successfully",
+      studentId: savedStudent._id,
+      name: savedStudent.name,
+    });
+  } catch (err) {
+    console.error("REGISTER ERROR:", err);
+
+    return res.status(500).json({
+      msg: err.message,
+    });
+  }
 };
 
 // LOGIN
