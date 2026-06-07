@@ -38,12 +38,7 @@ const registerStudent = async (req, res) => {
       !name ||
       !fatherName ||
       !email ||
-      !gender ||
-      !password ||
-      !address ||
-      !mobile ||
-      !dob ||
-      !pincode
+      !password 
     ) {
       return res.status(400).json({
         msg: "All fields are required",
