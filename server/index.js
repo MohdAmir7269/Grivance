@@ -41,6 +41,7 @@ const corsOptions = {
 
 // ✅ OPTIONS preflight handle karo
 app.use(cors(corsOptions));
+app.options("/", cors(corsOptions));
 
 
 app.use('/api/admin', adminRoutes);

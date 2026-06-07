@@ -14,6 +14,8 @@ const getStudents = async (req, res) => {
     }
 };
 
+
+
 // REGISTER
 const registerStudent = async (req, res) => {
     try {

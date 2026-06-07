@@ -20,5 +20,10 @@ router.post("/login", loginStudent);
 // ✅ NAYE ROUTES
 router.put("/update-profile", updateProfile);
 router.post("/change-password", changePassword);
-
+// router.get("/register", (req, res) => {
+//   res.json({
+//     success: true,
+//     message: "Register API is working"
+//   });
+// });
 module.exports = router;
