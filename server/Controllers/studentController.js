@@ -19,34 +19,50 @@ const getStudents = async (req, res) => {
 // REGISTER
 const registerStudent = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { name, email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({ msg: "All fields required" });
+        // Validation
+        if (!name || !email || !password) {
+            return res.status(400).json({
+                msg: "All fields are required"
+            });
         }
 
-        const exist = await Student.findOne({ email });
+        // Check if email already exists
+        const exist = await Student.findOne({
+            email: email.toLowerCase()
+        });
+
         if (exist) {
-            return res.status(400).json({ msg: "Email already exists" });
+            return res.status(400).json({
+                msg: "Email already exists"
+            });
         }
 
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Create student
         const student = new Student({
             ...req.body,
-            password: hashedPassword,
+            email: email.toLowerCase(),
+            password: hashedPassword
         });
 
         await student.save();
 
-        res.status(201).json({
-            msg: "Student added successfully",
+        return res.status(201).json({
+            msg: "Student registered successfully",
             studentId: student._id,
             name: student.name
         });
 
     } catch (err) {
-        res.status(500).json({ msg: "Student not added" });
+        console.error("Error:", err.message);
+
+        return res.status(500).json({
+            msg: "Internal Server Error"
+        });
     }
 };
 
