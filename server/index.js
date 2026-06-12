@@ -25,6 +25,9 @@ app.use(morgan("dev"));
 // ✅ CORS - pehle rakho
 const corsOptions = {
   origin: (origin, callback) => {
+    console.log("Request Origin:", origin);
+    console.log("Allowed Origin:", process.env.FRONTEND_URL);
+
     const allowedOrigins = [
       process.env.FRONTEND_URL,
     ];
@@ -40,9 +43,15 @@ const corsOptions = {
 
 
 // ✅ OPTIONS preflight handle karo
-app.use(cors(corsOptions));
-app.options("/", cors(corsOptions));
+// app.use(cors(corsOptions));
+// app.options("*", cors(corsOptions));
 
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 
 app.use('/api/admin', adminRoutes);
 app.use('/api/college', collegeRoutes);
